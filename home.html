@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+{% if question %}
+    <br/>
+   <h3> Question: {{question }}</h3>
+   <br/>
+   <h3>Content length: {{ maxlength }}</h3>
+   <br/>
+{% endif %}
+
+<div class="card">
+    <div class="card-header">
+      AI Response 
+    </div>
+    <div class="card-body">
+    <br/>    
+    {% if result %}
+    <br/>
+    <h3> result: {{ result }}</h3>
+    <br/>    
+    <br/>    
+    {% endif %}
+    </div>
+  </div>
+
+  <br>
+  <br>
+  <form method=POST action="{% url 'home' %}">
+    {% csrf_token %}
+    <div class="mb-3">
+     
+      <input type="text" class="form-control"  placeholder="Please state your topic " name="question">
+     
+    </div>
+    <div class="mb-3"> 
+    <input type="number" class="form-control"  placeholder="Please insert your content max length" name="maxlength">
+  </div>
+  
+    <button type="submit" class="btn btn-primary">Submit</button>
+  </form>
+
+{% endblock %}
+
