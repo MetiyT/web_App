@@ -1,0 +1,90 @@
+<!-- home.html -->
+
+{% extends "base.html" %}
+
+{% block content %}
+<nav class="navbar">
+  <h1 class="navbar-title">Employee Time Tracking</h1>
+  <form action="{% url 'signout' %}" method="POST">
+    {% csrf_token %}
+    <button type="submit" class="signout-button">
+      <img src="/static/images/signout.png" alt="Sign Out" class="navbar-icon"> signout
+    </button>
+  </form>
+</nav>
+<div class="container-home">
+  <h1>Employee Portal</h1>
+  <p>Fill your attendance by entering your Employee Code: {{ employee_code }}</p>
+
+  {% if employee_code %}
+    {% if attendance and attendance.check_in %}
+
+    <!-- Render the check-out label or button -->
+    <form method="POST" class="form-group-home">
+      {% csrf_token %}
+      <label for="check-out">Check-out Value:</label>
+      <input type="text" {% if attendance.check_out %}disabled{% endif %} id="check-out" name="check_out" required>
+      <button type="submit" {% if attendance.check_out %}disabled{% endif %}>Submit</button>
+    </form>
+    {% else %}
+
+    <!-- Render the check-in label or button -->
+    <form method="POST" class="form-group-home">
+      {% csrf_token %}
+      <label for="check-in">Check-in Value:</label>
+      <input type="text" id="check-in" name="check_in" required>
+      <button type="submit">Submit</button>
+    </form>
+    {% endif %}
+  {% else %}
+  <p>Please log in to view your home page.</p>
+  {% endif %}
+
+  <table>
+    <caption>Attendance Records</caption>
+    <thead>
+      <tr>
+        <th>Date</th>
+        <th>Check-in</th>
+        <th>Check-out</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for record in attendance_records %}
+      <tr>
+        <td>{{ record.date }}</td>
+        <td>{{ record.check_in|default:"N/A" }}</td>
+        <td>{{ record.check_out|default:"N/A" }}</td>
+
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <!-- Working Hours Summary -->
+  <table class="working-hours-summary">
+    <caption>Working Hours Summary</caption>
+    <thead>
+      <tr>
+        <th>Period</th>
+        <th>Total Working Hours</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Daily</td>
+        <td>{{ total_working_hours_daily }}</td>
+      </tr>
+      <tr>
+        <td>Weekly</td>
+        <td>{{ total_working_hours_weekly }}</td>
+      </tr>
+      <tr>
+        <td>Monthly</td>
+        <td>{{ total_working_hours_monthly }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+{% endblock %}
